@@ -19,11 +19,18 @@ if st.button("Analyze"):
         auto_adjust=True
     )
 
+    # Fix MultiIndex columns
+    if isinstance(stock.columns, pd.MultiIndex):
+        stock.columns = stock.columns.get_level_values(0)
+
     if stock.empty:
         st.error("Invalid Stock Symbol")
     else:
         st.subheader("Latest Data")
         st.dataframe(stock.tail())
 
+        # Debug
+        st.write("Columns:", stock.columns)
+
         st.subheader("Stock Price Chart")
-        st.line_chart(stock["Close"])
+        st.line_chart(stock[["Close"]])
