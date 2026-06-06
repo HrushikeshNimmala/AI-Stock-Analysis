@@ -24,7 +24,7 @@ if st.button("Analyze"):
         stock.columns = stock.columns.get_level_values(0)
 
     if stock.empty:
-    st.error("Invalid Stock Symbol")
+        st.error("Invalid Stock Symbol")
 
     else:
         st.subheader("Latest Data")
