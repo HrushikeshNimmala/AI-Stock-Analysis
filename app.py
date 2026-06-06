@@ -19,7 +19,6 @@ if st.button("Analyze"):
         auto_adjust=True
     )
 
-    # Fix MultiIndex columns
     if isinstance(stock.columns, pd.MultiIndex):
         stock.columns = stock.columns.get_level_values(0)
 
@@ -30,13 +29,10 @@ if st.button("Analyze"):
         st.subheader("Latest Data")
         st.dataframe(stock.tail())
 
-        # ADD THE TECHNICAL INDICATOR CODE HERE
-
-            stock["MA50"] = stock["Close"].rolling(50).mean()
-    stock["MA200"] = stock["Close"].rolling(200).mean()
+        stock["MA50"] = stock["Close"].rolling(50).mean()
+        stock["MA200"] = stock["Close"].rolling(200).mean()
 
         delta = stock["Close"].diff()
-
         gain = delta.where(delta > 0, 0)
         loss = -delta.where(delta < 0, 0)
 
@@ -44,7 +40,6 @@ if st.button("Analyze"):
         avg_loss = loss.rolling(14).mean()
 
         rs = avg_gain / avg_loss
-
         stock["RSI"] = 100 - (100 / (1 + rs))
 
         exp1 = stock["Close"].ewm(span=12, adjust=False).mean()
@@ -65,14 +60,11 @@ if st.button("Analyze"):
             recommendation = "HOLD"
 
         st.subheader("Technical Analysis")
-
         st.write("RSI:", round(latest_rsi, 2))
         st.write("MACD:", round(latest_macd, 2))
         st.write("Signal Line:", round(latest_signal, 2))
 
         st.success(f"Recommendation: {recommendation}")
-
-        # EXISTING CHART CODE BELOW
 
         st.subheader("Stock Price Chart")
         st.line_chart(stock[["Close"]])
